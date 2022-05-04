@@ -26,7 +26,7 @@ const { User } = require('../models/user');
 
         const token = user.generateNewToken();
         
-        response.status(200).send( token );
+        response.status(200).send( {token} );
 
     })
 

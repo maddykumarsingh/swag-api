@@ -5,6 +5,7 @@ const morgan = require('morgan');
 const  path = require('path');
 const mongoose = require('mongoose');
 const config = require('config');
+const cors = require('cors')
 
 
 
@@ -35,7 +36,7 @@ app.use( express.json() );
 app.use( express.urlencoded({ extended:true }) );
 app.use( express.static('public') );
 app.use(helmet());
-
+app.use(cors());
 
 
 
