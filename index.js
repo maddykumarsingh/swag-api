@@ -1,16 +1,22 @@
 const express = require('express');
 const fs = require('fs')
+
+const multer = require('multer');
+const upload = multer();
+
 const helmet = require('helmet');
 const morgan = require('morgan');
 const  path = require('path');
 const mongoose = require('mongoose');
 const config = require('config');
 const cors = require('cors')
+const fileUpload = require('express-fileupload');
 
 
 
 const users = require('./routes/users');
 const auth = require('./routes/auth');
+const services = require('./routes/services')
 
 let accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' })
 
@@ -34,9 +40,14 @@ app.set('views','./views')
 
 app.use( express.json() );
 app.use( express.urlencoded({ extended:true }) );
+
+app.use(upload.array());
 app.use( express.static('public') );
+
+
 app.use(helmet());
 app.use(cors());
+app.use(fileUpload());
 
 
 
@@ -53,6 +64,7 @@ app.get('/' , ( request , response) => {
 
 app.use('/users' , users );
 app.use('/auth' , auth );
+app.use('/services' , services );
 
 
 

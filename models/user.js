@@ -35,10 +35,12 @@ const userSchema = new mongoose.Schema({
 
     role:{
        type:String,
-       enum:[ 'guest' , 'root' , 'superadmin' , 'admin' , 'broker' , 'customer' ],
-       default:'guest',
+       enum:[ 'root' , 'superadmin' , 'admin' , 'broker' , 'customer' ],
+       default:'customer',
        lowercase:true
     },
+
+    createdBy:String,
 
     is_active:{ 
         type:Boolean,

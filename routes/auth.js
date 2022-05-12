@@ -30,6 +30,12 @@ const { User } = require('../models/user');
 
     })
 
+    router.post('/logout', async( request , response ) => {
+
+        response.status(200).send('Successfully Logout');
+
+    })
+
     function validate(body , response) {
         let schema = Joi.object({
             email:Joi.string().email().max(255).required(),
