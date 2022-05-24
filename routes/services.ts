@@ -1,10 +1,12 @@
-const express = require('express');
+import express from 'express';
+
+const auth = require('../middleware/auth');
 const router = express.Router()
 
 const { Service , validate } = require('../models/service');
 
 
-router.get('/' , async ( request , response) => {
+router.get('/' , auth ,async ( request , response) => {
     const services = await Service.find();
     response.send( services )
 })
@@ -14,7 +16,7 @@ router.get('/:service_id', async( request , response )=> {
     let service_id = request.params.service_id;
   
     try {
-        let service = await User.findById( service_id );
+        let service = await Service.findById( service_id );
        
         if( !service ) return response.status(404).send("The service with the given service ID was not found ")
 
@@ -39,7 +41,7 @@ router.post('/', async( request , response ) => {
 
 
 
-    service =  new Service({
+   let service =  new Service({
        name:body.name,
        document:body.documents,
        price:body.prices

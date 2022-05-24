@@ -1,11 +1,25 @@
-const mongoose = require('mongoose');
-const Joi = require('joi');
+import { Schema, model, connect  } from 'mongoose';
+import Joi from 'joi';
 const jwt = require('jsonwebtoken');
 const config = require('config');
 
 
 
-const serviceSchema = new mongoose.Schema({ 
+interface Price{
+    role:string ,
+    price:string,
+    discount:string
+}
+
+interface IService{
+   name:string ,
+   prices:Price[],
+   documents:string[],
+   is_active:boolean 
+}
+
+
+const serviceSchema = new Schema<IService>({ 
     name:{ 
         type:String,
         required:true,
@@ -29,10 +43,10 @@ const serviceSchema = new mongoose.Schema({
 
 
 
- const Service = mongoose.model('Service' , mongoose.Schema( serviceSchema ) );
+ const Service = model<IService>('Service' ,  serviceSchema );
 
 
- function validate( body , response  ){
+ function validate( body:any , response:any ){
 
     let schema = Joi.object({
         name:Joi.string().min(3).max(50).required(),

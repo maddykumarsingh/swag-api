@@ -1,11 +1,23 @@
-const mongoose = require('mongoose');
+import { Schema, model, connect } from 'mongoose';
+
 const Joi = require('joi');
 const jwt = require('jsonwebtoken');
 const config = require('config');
 
+interface IUser {
+    name: string;
+    email: string;
+    mobile:string;
+    password:string;
+    role:string;
+    createdBy:string;
+    is_active:boolean;
+    avatar?: string;
+}
 
 
-const userSchema = new mongoose.Schema({ 
+
+const userSchema = new Schema<IUser>({ 
     name:{ 
         type:String,
         required:true,
@@ -42,6 +54,8 @@ const userSchema = new mongoose.Schema({
 
     createdBy:String,
 
+    avatar:String,
+
     is_active:{ 
         type:Boolean,
         default:true
@@ -53,10 +67,10 @@ const userSchema = new mongoose.Schema({
  }
 
 
- const User = mongoose.model('User' , mongoose.Schema( userSchema ) );
+ const User = model<IUser>('User' , userSchema );
 
 
- function validate( body , response  ){
+ function validate( body:any , response:any ){
 
     let schema = Joi.object({
         name:Joi.string().min(3).max(50).required(),

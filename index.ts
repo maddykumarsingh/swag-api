@@ -1,4 +1,4 @@
-const express = require('express');
+import express from 'express';
 const fs = require('fs')
 
 const multer = require('multer');
@@ -30,7 +30,7 @@ if( !config.get('jwtPrivateKey') ){
 
 
 
-const app = express();
+const app:express.Application = express();
 
 
 app.set('view engine' , 'pug');
@@ -74,5 +74,5 @@ app.listen( port , () => {   console.log('\x1b[32m%s\x1b[0m', `Server is listeni
 
 mongoose.connect('mongodb://localhost/swagkari-data')
     .then(() => console.log('\x1b[32m%s\x1b[0m', 'Connected to Database...') )
-    .catch( error => console.error('Unable to connect to database.' ,  error ) );
+    .catch( (error:any) => console.error('Unable to connect to database.' ,  error ) );
 

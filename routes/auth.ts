@@ -1,17 +1,16 @@
-const express = require('express');
-const Joi = require('joi')
+import express from 'express';
+import Joi from 'joi'
 const router = express.Router();
 const bcrypt = require('bcrypt');
 
 const { User } = require('../models/user');
+const req = require('express/lib/request');
 
 
     router.post('/login', async( request , response ) => {
     
 
         const { body } = request 
-
-
         if( ! validate( body , response ) ) return;
         
 
@@ -25,7 +24,8 @@ const { User } = require('../models/user');
 
 
         const token = user.generateNewToken();
-        
+        response.header('x-auth-token', token );
+        response.cookie('x-auth-token', token );
         response.status(200).send( {token} );
 
     })
@@ -36,7 +36,7 @@ const { User } = require('../models/user');
 
     })
 
-    function validate(body , response) {
+    function validate(body :any, response:any) {
         let schema = Joi.object({
             email:Joi.string().email().max(255).required(),
             password:Joi.string().max(255).required()

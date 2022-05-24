@@ -1,12 +1,15 @@
-const express = require('express');
+import express, { Router } from 'express';
+
 const bcrypt = require('bcrypt');
-const router = express.Router()
+
+const router:Router = express.Router()
 
 const { User , validate } = require('../models/user');
+const { pick } = require('../helpers/pick');
 
 
 router.get('/' , async ( request , response) => {
-    const users = await User.find();
+    const users = await User.find().select('-password');
     response.send( users )
 })
 
