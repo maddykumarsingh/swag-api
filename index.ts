@@ -18,6 +18,7 @@ const fileUpload = require('express-fileupload');
 const users = require('./routes/users');
 const auth = require('./routes/auth');
 const services = require('./routes/services')
+const leads = require('./routes/lead')
 
 let accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' })
 
@@ -66,6 +67,7 @@ app.get('/' , ( request , response) => {
 app.use('/users' , users );
 app.use('/auth' , auth );
 app.use('/services' , services );
+app.use('/leads' , leads );
 
 
 
