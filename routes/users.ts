@@ -1,15 +1,16 @@
 import express, { Router } from 'express';
+import { auth } from '../middleware/auth';
+import { User, validate } from '../models/user';
 
 const bcrypt = require('bcrypt');
 
 const router:Router = express.Router()
 
-const { User , validate } = require('../models/user');
 const { pick } = require('../helpers/pick');
 
 
-router.get('/' , async ( request , response) => {
-    const users = await User.find().select('-password');
+router.get('/' , auth , async ( request , response) => {
+    const users = await User.find().select('-password -__v');
     response.send( users )
 })
 

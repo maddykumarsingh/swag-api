@@ -1,4 +1,6 @@
 import express from 'express';
+import mongoose from 'mongoose';
+import { connectionOptions, mongodbUri } from './config/db.config';
 const fs = require('fs')
 
 const multer = require('multer');
@@ -7,7 +9,6 @@ const upload = multer();
 const helmet = require('helmet');
 const morgan = require('morgan');
 const  path = require('path');
-const mongoose = require('mongoose');
 const config = require('config');
 const cors = require('cors')
 const fileUpload = require('express-fileupload');
@@ -68,11 +69,13 @@ app.use('/services' , services );
 
 
 
-const port = process.env.PORT || 3000; 
+const port:number | string = process.env.PORT || 3000; 
+
+
 
 app.listen( port , () => {   console.log('\x1b[32m%s\x1b[0m', `Server is listening on port ${port}...` ) });
 
-mongoose.connect('mongodb://localhost/swagkari-data')
+mongoose.connect( mongodbUri , connectionOptions)
     .then(() => console.log('\x1b[32m%s\x1b[0m', 'Connected to Database...') )
     .catch( (error:any) => console.error('Unable to connect to database.' ,  error ) );
 

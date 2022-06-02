@@ -1,9 +1,10 @@
 import express from 'express';
+import { auth } from '../middleware/auth';
+import { Service, validate } from '../models/service';
 
-const auth = require('../middleware/auth');
 const router = express.Router()
 
-const { Service , validate } = require('../models/service');
+
 
 
 router.get('/' , auth ,async ( request , response) => {

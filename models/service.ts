@@ -5,13 +5,13 @@ const config = require('config');
 
 
 
-interface Price{
+export interface Price{
     role:string ,
     price:string,
     discount:string
 }
 
-interface IService{
+export interface IService{
    name:string ,
    prices:Price[],
    documents:string[],
@@ -19,7 +19,7 @@ interface IService{
 }
 
 
-const serviceSchema = new Schema<IService>({ 
+export const schema = new Schema<IService>({ 
     name:{ 
         type:String,
         required:true,
@@ -43,10 +43,10 @@ const serviceSchema = new Schema<IService>({
 
 
 
- const Service = model<IService>('Service' ,  serviceSchema );
+ export const Service = model<IService>('Service' ,  schema );
 
 
- function validate( body:any , response:any ){
+ export function validate( body:any , response:any ){
 
     let schema = Joi.object({
         name:Joi.string().min(3).max(50).required(),
@@ -64,6 +64,3 @@ const serviceSchema = new Schema<IService>({
 
 
 
- module.exports.Service = Service;
- module.exports.schema = serviceSchema;
- module.exports.validate = validate;

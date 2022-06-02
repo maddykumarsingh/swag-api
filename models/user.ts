@@ -1,10 +1,10 @@
-import { Schema, model, connect } from 'mongoose';
+import { Model , Schema, model  } from 'mongoose';
 
 const Joi = require('joi');
 const jwt = require('jsonwebtoken');
 const config = require('config');
 
-interface IUser {
+export interface IUser {
     name: string;
     email: string;
     mobile:string;
@@ -15,9 +15,18 @@ interface IUser {
     avatar?: string;
 }
 
+// Put all user instance methods in this interface:
+export interface IUserMethods {
+    generateNewToken(): string;
+}
 
 
-const userSchema = new Schema<IUser>({ 
+// Create a new Model type that knows about IUserMethods...
+type UserModel = Model<IUser, {}, IUserMethods>;
+
+
+
+export const schema = new Schema<IUser , UserModel , IUserMethods>({ 
     name:{ 
         type:String,
         required:true,
@@ -62,15 +71,15 @@ const userSchema = new Schema<IUser>({
     }
  })
 
- userSchema.methods.generateNewToken = function(){
+ schema.methods.generateNewToken = function(){
     return jwt.sign( { user_id:this._id , name:this.name , email:this.email , role:this.role } , config.get('jwtPrivateKey'));
  }
 
 
- const User = model<IUser>('User' , userSchema );
+ export const User = model<IUser, UserModel>( 'User' , schema )
 
 
- function validate( body:any , response:any ){
+ export function validate( body:any , response:any ):boolean{
 
     let schema = Joi.object({
         name:Joi.string().min(3).max(50).required(),
@@ -89,9 +98,3 @@ const userSchema = new Schema<IUser>({
 
     return true
  }
-
-
-
- module.exports.User = User;
- module.exports.schema = userSchema;
- module.exports.validate = validate;
