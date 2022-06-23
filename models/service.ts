@@ -12,10 +12,12 @@ export interface Price{
 }
 
 export interface IService{
-   name:string ,
-   prices:Price[],
-   documents:string[],
-   is_active:boolean 
+   name:string ;
+   rate:number ;
+   bannerImage:string ;
+   description:string ;
+   documents:string[] ;
+   is_active:boolean ;
 }
 
 
@@ -26,18 +28,14 @@ export const schema = new Schema<IService>({
         minlength:3,
         maxlength:50
     },
-
-    prices:{
-        type:[{ role:String , price:String , discount:String }]
-    },
-
+    rate:Number,
+    bannerImage:String,
+    description:String,
     documents:[ String ],
-
     is_active:{ 
         type:Boolean,
         default:true
     }
- 
 })
 
 
@@ -50,6 +48,9 @@ export const schema = new Schema<IService>({
 
     let schema = Joi.object({
         name:Joi.string().min(3).max(50).required(),
+        description:Joi.string() ,
+        rate:Joi.string(),
+        documents:Joi.array()
     });
 
     let { value , error } = schema.validate( body );

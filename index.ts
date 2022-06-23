@@ -1,17 +1,18 @@
 import express from 'express';
 import mongoose from 'mongoose';
+import fs from 'fs'
 import { connectionOptions, mongodbUri } from './config/db.config';
-const fs = require('fs')
 
-const multer = require('multer');
-const upload = multer();
+const cors = require('cors')
+
+const multer  = require('multer')
+
 
 const helmet = require('helmet');
 const morgan = require('morgan');
 const  path = require('path');
 const config = require('config');
-const cors = require('cors')
-const fileUpload = require('express-fileupload');
+
 
 
 
@@ -39,17 +40,13 @@ app.set('view engine' , 'pug');
 app.set('views','./views')
 
 
-
-app.use( express.json() );
-app.use( express.urlencoded({ extended:true }) );
-
-app.use(upload.array());
+app.use(express.json()) // for parsing application/json
+app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 app.use( express.static('public') );
 
 
 app.use(helmet());
 app.use(cors());
-app.use(fileUpload());
 
 
 
@@ -59,9 +56,19 @@ if( app.get('env') === 'development' ){
 }
 
 
-app.get('/' , ( request , response) => {
+
+
+
+
+
+
+app.get('/' , ( request:express.Request , response:express.Response ) => {
     response.render('index',{ title:'Swagkari Management' , heading:'Swagkari Management' })
 })
+
+
+
+
 
 
 app.use('/users' , users );
@@ -72,9 +79,6 @@ app.use('/leads' , leads );
 
 
 const port:number | string = process.env.PORT || 3000; 
-
-
-
 app.listen( port , () => {   console.log('\x1b[32m%s\x1b[0m', `Server is listening on port ${port}...` ) });
 
 mongoose.connect( mongodbUri , connectionOptions)

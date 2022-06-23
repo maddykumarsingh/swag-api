@@ -1,18 +1,34 @@
-import express from 'express';
+import express , { Router , Request , Response } from 'express';
+import multer from 'multer';
+import { configuration } from '../config/multer.config';
 import { auth } from '../middleware/auth';
 import { Service, validate } from '../models/service';
 
-const router = express.Router()
+
+
+
+const router = Router();
+
+configuration.storage = multer.diskStorage({
+    destination:( request , file , callback:any ) => {
+        callback(null , 'public/banner-image' )
+    },
+    filename:( request , file , callback:any ) => {
+       callback(null , Date.now()+".jpg" )
+    }
+})
+
+const bannerUpload = multer( configuration );
 
 
 
 
-router.get('/' , auth ,async ( request , response) => {
+router.get('/' , auth ,async ( request:Request , response:Response) => {
     const services = await Service.find();
     response.send( services )
 })
 
-router.get('/:service_id', async( request , response )=> {
+router.get('/:service_id', auth ,  async( request , response )=> {
 
     let service_id = request.params.service_id;
   
@@ -31,26 +47,33 @@ router.get('/:service_id', async( request , response )=> {
 })
 
 
-router.post('/', async( request , response ) => {
+router.post('/', [auth , bannerUpload.single('banner_image')] ,  async( request :Request, response:Response ) => {
    
 
-    const { body } = request 
-
+    const { body , file } = request 
 
     if( ! validate( body , response ) ) return;
+
+
+ 
+    
     
 
 
 
    let service =  new Service({
        name:body.name,
-       document:body.documents,
-       price:body.prices
+       documents:body.documents,
+       rate:body.rate ,
+       description:body.description ,
+       bannerImage:file?.filename
     })
 
     service = await service.save();
 
-    response.status(201).send( service );
+    //response.status(201).send( service );
+
+    response.json( service )
 
 })
 
