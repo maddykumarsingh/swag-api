@@ -2,13 +2,14 @@ import express from 'express';
 import Joi from 'joi'
 const router = express.Router();
 const bcrypt = require('bcrypt');
+import nodemailer from 'nodemailer'
+import { sendMail } from '../config/email.config';
 
 const { User } = require('../models/user');
 const req = require('express/lib/request');
 
 
     router.post('/login', async( request , response ) => {
-    
 
         const { body } = request 
         if( ! validate( body , response ) ) return;

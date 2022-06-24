@@ -1,7 +1,7 @@
 import express, { Router } from 'express';
 import { auth } from '../middleware/auth';
 import { User, validate } from '../models/user';
-
+import nodmailer from 'nodemailer'
 const bcrypt = require('bcrypt');
 
 const router:Router = express.Router()
