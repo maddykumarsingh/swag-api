@@ -1,7 +1,5 @@
 import express from 'express';
-import mongoose from 'mongoose';
 import fs from 'fs'
-import { connectionOptions, mongodbUri } from './config/db.config';
 
 const cors = require('cors')
 
@@ -20,6 +18,10 @@ const users = require('./routes/users');
 const auth = require('./routes/auth');
 const services = require('./routes/services')
 const leads = require('./routes/lead')
+
+const connector = require('./config/db.config')
+
+console.log(connector);
 
 let accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' })
 
@@ -80,8 +82,4 @@ app.use('/leads' , leads );
 
 const port:number | string = process.env.PORT || 3000; 
 app.listen( port , () => {   console.log('\x1b[32m%s\x1b[0m', `Server is listening on port ${port}...` ) });
-
-mongoose.connect( mongodbUri , connectionOptions)
-    .then(() => console.log('\x1b[32m%s\x1b[0m', 'Connected to Database...') )
-    .catch( (error:any) => console.error('Unable to connect to database.' ,  error ) );
 

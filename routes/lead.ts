@@ -37,9 +37,9 @@ const documentUpload = multer( configuration );
 
 
 
-router.get('/' , auth ,async ( request:Request , response:Response ) => {
-    const lead = await Lead.find();
-    response.send( lead )
+router.get('/' ,async ( request:Request , response:Response ) => {
+    // const lead = await Lead.find();
+    response.send("The leads are being presented now........!!")
 })
 
 router.get('/:lead_id', async( request , response )=> {

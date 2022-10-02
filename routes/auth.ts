@@ -11,23 +11,25 @@ const req = require('express/lib/request');
 
     router.post('/login', async( request , response ) => {
 
-        const { body } = request 
-        if( ! validate( body , response ) ) return;
+        response.send("Login Successfull...!!")
+
+        // const { body } = request 
+        // if( ! validate( body , response ) ) return;
         
 
-        let user  = await User.findOne({ email:body.email });
+        // let user  = await User.findOne({ email:body.email });
 
-        if( !user ) return response.status(400).send('Invalid username or password')
-
-
-        const validPassword = await bcrypt.compare( body.password , user.password );
-        if( !validPassword ) return response.status(400).send('Invalid username or password')
+        // if( !user ) return response.status(400).send('Invalid username or password')
 
 
-        const token = user.generateNewToken();
-        response.header('x-auth-token', token );
-        response.cookie('x-auth-token', token );
-        response.status(200).send( {token} );
+        // const validPassword = await bcrypt.compare( body.password , user.password );
+        // if( !validPassword ) return response.status(400).send('Invalid username or password')
+
+
+        // const token = user.generateNewToken();
+        // response.header('x-auth-token', token );
+        // response.cookie('x-auth-token', token );
+        // response.status(200).send( {token} );
 
     })
 

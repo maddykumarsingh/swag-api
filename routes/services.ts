@@ -23,9 +23,9 @@ const bannerUpload = multer( configuration );
 
 
 
-router.get('/' , auth ,async ( request:Request , response:Response) => {
-    const services = await Service.find();
-    response.send( services )
+router.get('/' ,async ( request:Request , response:Response) => {
+    // const services = await Service.find();
+    response.send("You are in services Now......!!")
 })
 
 router.get('/:service_id', auth ,  async( request , response )=> {

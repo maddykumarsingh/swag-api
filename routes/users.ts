@@ -9,9 +9,9 @@ const router:Router = express.Router()
 const { pick } = require('../helpers/pick');
 
 
-router.get('/' , auth , async ( request , response) => {
-    const users = await User.find().select('-password -__v');
-    response.send( users )
+router.get('/'  , async ( request , response) => {
+    //const users = await User.find().select('-password -__v');
+    response.send("You are viewing users now")
 })
 
 router.get('/:user_id', async( request , response )=> {
