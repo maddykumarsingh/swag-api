@@ -1,10 +1,10 @@
 import mysql from "mysql";
 
 const connection = mysql.createConnection({
-  host: "127.0.0.1",
-  user: "root",
-  password: "",
-  database: "peoplesPerson",
+  host: "156.67.214.219",
+  user: "iammrmad",
+  password: "Maddy@123",
+  database: "swagkari",
   insecureAuth: true,
 });
 
@@ -17,4 +17,4 @@ const connector = connection.connect((err:any) => {
     }
 })
 
-module.exports = connector
+module.exports = connection
