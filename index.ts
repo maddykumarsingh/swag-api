@@ -3,7 +3,6 @@ import fs from 'fs'
 
 const cors = require('cors')
 
-const multer  = require('multer')
 
 
 const helmet = require('helmet');
@@ -13,15 +12,13 @@ const config = require('config');
 
 
 
-
-const users = require('./routes/users');
 const auth = require('./routes/auth');
-const services = require('./routes/services')
-const leads = require('./routes/lead')
 
-const connector = require('./config/db.config')
+// const users = require('./routes/users');
+// const services = require('./routes/services')
+// const leads = require('./routes/lead')
 
-console.log(connector);
+
 
 let accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' })
 
@@ -73,10 +70,10 @@ app.get('/' , ( request:express.Request , response:express.Response ) => {
 
 
 
-app.use('/users' , users );
+// app.use('/users' , users );
 app.use('/auth' , auth );
-app.use('/services' , services );
-app.use('/leads' , leads );
+// app.use('/services' , services );
+// app.use('/leads' , leads );
 
 
 

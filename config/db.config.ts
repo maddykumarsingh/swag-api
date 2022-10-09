@@ -1,6 +1,6 @@
 import mysql from "mysql";
 
-const connection = mysql.createConnection({
+export const connection = mysql.createConnection({
   host: "156.67.214.219",
   user: "iammrmad",
   password: "Maddy@123",
@@ -8,13 +8,5 @@ const connection = mysql.createConnection({
   insecureAuth: true,
 });
 
-const connector = connection.connect((err:any) => {
-    if(err){
-        throw err;
-    }
-    else{
-        console.log('Connected to Database Successfully......!!');
-    }
-})
 
-module.exports = connection
+
