@@ -1,5 +1,5 @@
-import express, { response } from "express";
-import Joi, { boolean } from "joi";
+import express from "express";
+import Joi from "joi";
 import { User } from "../models/user";
 
 const router = express.Router();
@@ -46,6 +46,8 @@ router.post("/login", async (request, response) => {
 router.post("/logout", async (request, response) => {
   response.status(200).send("Successfully Logout");
 });
+
+
 
 function validate(body: any, response: any) {
   let schema = Joi.object({
