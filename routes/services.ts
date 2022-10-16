@@ -2,7 +2,7 @@ import express , { Router , Request , Response } from 'express';
 import multer from 'multer';
 import { configuration } from '../config/multer.config';
 import { auth } from '../middleware/auth';
-import { Service, Services } from '../models/service';
+import { Services } from '../models/service';
 import Joi from 'joi';
 
 
@@ -25,129 +25,87 @@ const bannerUpload = multer( configuration );
 const services = new Services();
 
 router.get('/' ,async (request:Request , response:Response) => {
-    const findAllServices = await services.getAllService();
+
+    const findAllServices = await services.getAllServices();
     if (findAllServices){
 
-        console.log(findAllServices);
-        response.send("You have all the requested services......!!");
+        console.log(true)
+        response.send(findAllServices);
         return
 
     }
-
-    console.log(findAllServices);
+    console.log(false);
     response.status(404).send("No services found.....!!");
 })
 
 router.get('/:service_id',  async(request:Request , response:Response)=> {
+
     const findService = await services.getService(request.params.service_id);
+    
     if (findService){
 
-        console.log(findService);
-        response.send("You have the requested service......!!");
+        console.log(true)
+        response.json(findService);
         return
 
     }
-
-    console.log(findService);
-    response.status(404).send("No services found.....!!");
-
-    // let service_id = request.params.service_id;
-  
-    // try {
-    //     let service = await Service.findById( service_id );
-       
-    //     if( !service ) return response.status(404).send("The service with the given service ID was not found ")
-
-    //     response.send( service );
-
-    // } catch (error) {
-    //     console.error('Error while fetching user_id /api/services/:service_id ','\n Error was:', error );
-    //     response.status(500).send('Oops! Something wents wrong.')
-    // } 
-
+    console.log(false)
+    response.status(404).send("There is no such service.....!!");
 })
 
-router.post('/', auth ,  async( request :Request, response:Response ) => {
+router.post('/', async( request :Request, response:Response ) => {
 
     const { body } = request;
   
     if (!validate(body, response)) return;
 
-    // let service = new Service( body.name, body.description, body.rate );
     const createService = await services.createService(body);
     if (createService){
 
-        console.log(createService);
-        response.send("New service created......!!");
+        console.log(true);
+        response.send("New service created successfully......!!");
         return
 
     }
-
-    console.log(createService);
-    response.status(404).send("Service not created.....!!");
-})
-
-// router.post('/', [auth , bannerUpload.single('banner_image')] ,  async( request :Request, response:Response ) => {
-   
-
-//     const { body , file } = request 
-
-//     if( ! validate( body , response ) ) return;
-
-//    let service =  new Service({
-//        name:body.name,
-//        documents:body.documents,
-//        rate:body.rate ,
-//        description:body.description ,
-//        bannerImage:file?.filename
-//     })
-
-    // service = await service.save();
-
-    //response.status(201).send( service );
-
-    // response.json( service )
-// })
-
-
+    console.log(false);
+    response.status(404).send("Oops! Something went wrong..... Service not created.....!!");
+});
 
 router.put('/:service_id' , async ( request , response ) => {
-    // const { body , params } = request;
 
-    // if( ! validate( body , response ) ) return;
+    const { body } = request;
+  
+    if (!validate(body, response)) return;
 
+    const updateService = await services.updateService(body, request.params.service_id);
+    if (updateService){
 
-    // let service = await Service.findByIdAndUpdate( params.service_id , { 
-    //     name:body.name , 
-    //     email:body.email , 
-    // } , { new:true } );
+        console.log(true);
+        response.send(updateService);
+        return
 
-    
-
-
-    // if( ! service ){
-    //     response.status( 404 ).send("The user with given ID was not found."); 
-    //     return;
-    // }
-
-    // response.send( service )
+    }
+    console.log(false);
+    response.status(404).send("Oops! Something went wrong..... Service not updated.....!!");
 })
 
 
 router.delete('/:service_id', async ( request , response )=>{
-    
-//   const { params , body  } = request
 
-//   let service = await Service.findByIdAndDelete( params.service_id  );
+    const { body } = request;
+  
+    if (!validate(body, response)) return;
 
-//     if( ! service ){
-//         response.status( 404 ).send("The bug with given ID was not found.");
-//         return;
-//     }
+    const removeService = await services.deleteService(request.params.service_id);
+    if (removeService){
 
+        console.log(true);
+        response.send("The service deleted successfully......!!");
+        return
 
-//     response.status( 200 ).send( service )
-
+    }
+    console.log(false);
+    response.status(404).send("Oops! Something went wrong..... Service not deleted.....!!");
 })
 
 
