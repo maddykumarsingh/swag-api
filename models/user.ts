@@ -158,8 +158,7 @@ export class Users extends User{
                             fullname='${body.fullname}', 
                             email='${body.email}', 
                             role_id='${body.role_id}',
-                            verified='${body.verified}',
-                            status='${body.status}'
+                            verified='${body.verified}'
                             where id='${user_id}'`;
             
             const selectQuery = `select * from swagkari.user where id='${user_id}' and status='1';`;
@@ -172,8 +171,9 @@ export class Users extends User{
                     connection.query(selectQuery, (error:any, result:any) => {
 
                         if ( error ) reject( error );
-                        console.log(result);
-                        resolve( result );
+
+                        if(result[0] != undefined) resolve( result );
+                        else resolve(false)
                     });
                     }
               );
