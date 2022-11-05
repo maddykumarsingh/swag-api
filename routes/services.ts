@@ -10,15 +10,6 @@ import Joi from 'joi';
 
 const router = Router();
 
-// configuration.storage = multer.diskStorage({
-//     destination:( request , file , callback:any ) => {
-//         callback(null , 'public/banner-image' )
-//     },
-//     filename:( request , file , callback:any ) => {
-//        callback(null , Date.now()+".jpg" )
-//     }
-// })
-
 const bannerUpload = multer( configuration );
 
 
@@ -87,7 +78,7 @@ router.put('/:service_id' , async ( request , response ) => {
     }
     console.log(false);
     response.status(404).send("Oops! Something went wrong..... Service not updated.....!!");
-})
+});
 
 
 router.delete('/:service_id', async ( request , response )=>{
@@ -106,7 +97,7 @@ router.delete('/:service_id', async ( request , response )=>{
     }
     console.log(false);
     response.status(404).send("Oops! Something went wrong..... Service not deleted.....!!");
-})
+});
 
 
 

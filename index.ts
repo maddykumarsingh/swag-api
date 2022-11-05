@@ -15,7 +15,7 @@ const config = require('config');
 const auth = require('./routes/auth');
 const services = require('./routes/services')
 
-// const users = require('./routes/users');
+const users = require('./routes/users');
 // const leads = require('./routes/lead')
 
 
@@ -70,7 +70,7 @@ app.get('/' , ( request:express.Request , response:express.Response ) => {
 
 
 
-// app.use('/users' , users );
+app.use('/users' , users );
 app.use('/auth' , auth );
 app.use('/services' , services );
 // app.use('/leads' , leads );

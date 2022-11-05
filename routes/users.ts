@@ -1,121 +1,135 @@
 import express, { Router } from 'express';
-import { auth } from '../middleware/auth';
-import { User, validate } from '../models/user';
-import nodmailer from 'nodemailer'
-const bcrypt = require('bcrypt');
+const router:Router = express.Router();
+import { User, Users } from '../models/user';
+import Joi from 'joi';
 
-const router:Router = express.Router()
+// import { auth } from '../middleware/auth';
+// import nodmailer from 'nodemailer'
+// const bcrypt = require('bcrypt');
 
-const { pick } = require('../helpers/pick');
 
+// const { pick } = require('../helpers/pick');
+
+const users = new Users("", "");
 
 router.get('/'  , async ( request , response) => {
-    //const users = await User.find().select('-password -__v');
-    response.send("You are viewing users now")
+    const findAllUsers = await users.getAllUsers();
+    if (findAllUsers){
+
+        console.log(true)
+        response.send(findAllUsers);
+        return
+
+    }
+    console.log(false);
+    response.status(404).send("No users found.....!!");
 })
 
 router.get('/:user_id', async( request , response )=> {
 
-    let user_id = request.params.user_id;
-  
-    try {
-        let user = await User.findById( user_id );
-       
-        if( !user ) return response.status(404).send("The user with the given user ID was not found ")
+    const findUser = await users.getUser(request.params.user_id);
+    
+    if (findUser){
 
-        response.send( user );
+        console.log(true)
+        response.json(findUser);
+        return
 
-    } catch (error) {
-        console.error('Error while fetching user_id /api/users/:userid ','\n Error was:', error );
-        response.status(500).send('Oops! Something wents wrong.')
-    } 
-
+    }
+    console.log(false)
+    response.status(404).send("No such user found.....!!");
 })
 
 
 router.post('/', async( request , response ) => {
-   
 
-    const { body } = request 
+    const { body } = request;
+  
+    if (!validate(body, response)) return;
 
+    let user = new User( body.mobile , body.otp );
 
-    if( ! validate( body , response ) ) return;
-     
+    const isMembership:boolean  = await user.isMembership();
 
-    let user  = await User.findOne({ email:body.email })
+    if( !isMembership ){
+        let isMembershipCreated:boolean  = await user.createMembership();
 
-    if( user ) return response.status(400).send('User already register.')
+        if( isMembershipCreated ) {
 
-
-
-
-    user =  new User({
-       name:body.name,
-       email:body.email,
-       password:body.password,
-       mobile:body.mobile,
-       role:body.role
-    })
-
-    const salt = await bcrypt.genSalt(10);
-    user.password = await bcrypt.hash( user.password , salt );
-    
-
-
-    user = await user.save();
-
-
-
-    const token = user.generateNewToken();
-    response.header('x-jwt-token',token ).status(201).send( user );
-
-})
+            let isSentOtp:boolean = await user.sendOtp()
+            if( isSentOtp ) response.send('New user created successfully. OTP has been sent to your registered mobile number...');
+            else response.status( 400 ).send('Server is down Please contact your IT adminstration.');
+            return;
+        }
+    }
+    else{
+        let isSentOtp:boolean = await user.sendOtp()
+        if( isSentOtp ) response.send('Existing user. OTP has been sent to your registered mobile number...');
+        else response.status( 500 ).send('Server is down Please contact your IT adminstration.');
+        return;
+    }
+    console.log(false);
+    response.status(404).send("Oops! Something went wrong..... User not created.....!!");
+});
 
 
 
 router.put('/:user_id' , async ( request , response ) => {
-    const { body , params } = request;
 
-    if( ! validate( body , response ) ) return;
+    const { body } = request;
+  
+    if (!validate(body, response)) return;
 
+    const updateUser = await users.updateUser(body, request.params.user_id);
+    if (updateUser){
 
-    let user = await User.findByIdAndUpdate( params.user_id , { 
-        name:body.name , 
-        email:body.email , 
-    } , { new:true } );
+        console.log(true);
+        response.send(updateUser);
+        return
 
-    
-
-
-    if( ! user ){
-        response.status( 404 ).send("The user with given ID was not found."); 
-        return;
     }
-
-   
-
-   
-
-    response.send( user )
-})
+    console.log(false);
+    response.status(404).send("Oops! Something went wrong..... User not updated.....!!");
+});
 
 
 router.delete('/:user_id', async ( request , response )=>{
-    
-  const { params , body  } = request
 
-  let user = await User.findByIdAndDelete( params.user_id  );
+    const removeUser = await users.deleteUser(request.params.user_id);
+    if (removeUser){
 
-    if( ! user ){
-        response.status( 404 ).send("The bug with given ID was not found.");
-        return;
+        console.log(true);
+        response.send("The selected user deleted successfully......!!");
+        return
+
     }
+    console.log(false);
+    response.status(404).send("Oops! Something went wrong..... user not deleted.....!!");
+});
 
 
-    response.status( 200 ).send( user )
-
-})
 
 
+
+function validate(body: any, response: any) {
+    let schema = Joi.object({
+      mobile: Joi.string().trim().min(10).max(10).required(),
+      otp: Joi.string().min(8).max(8),
+      fullname:Joi.string().min(10).max(50),
+      email:Joi.string().email(),
+      role_id:Joi.string().min(1).max(2),
+      verified:Joi.string().min(1).max(2),
+      status:Joi.string().min(1).max(1),
+    });
+  
+    let { value, error } = schema.validate(body);
+  
+    if (error) {
+      response.status(400).send(error.details[0].message);
+      return false;
+    }
+  
+    return true;
+}
 
 module.exports = router
