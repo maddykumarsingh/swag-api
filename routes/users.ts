@@ -138,11 +138,11 @@ router.patch('/role/:user_id', async(request, response) => {
     if (isRoleChanged){
 
         console.log(true);
-        response.send(JSON.stringify({ "Message": "The role changed for selected user successfully......!!"}));
+        response.send(JSON.stringify({ "Message": "The role updated for selected user successfully......!!"}));
         return
     }
     console.log(false);
-    response.status(404).send(JSON.stringify({ "Error": "Oops! Something went wrong..... Role not changed.....!!"}));
+    response.status(404).send(JSON.stringify({ "Error": "Oops! Something went wrong..... Role can not be updated.....!!"}));
 });
 
 
@@ -167,20 +167,23 @@ router.delete('/:user_id', async ( request , response )=>{
 
 
 function validate(body: any, response: any) {
+
+    response.setHeader('Content-Type', 'application/json');
+
     let schema = Joi.object({
-      mobile: Joi.string().trim().min(10).max(10).required(),
-      otp: Joi.string().min(8).max(8),
-      fullname:Joi.string().min(10).max(50),
-      email:Joi.string().email(),
-      role_id:Joi.string().min(1).max(2),
-      verified:Joi.string().min(1).max(2),
-      status:Joi.string().min(1).max(1),
+        mobile: Joi.string().trim().min(10).max(10).required(),
+        otp: Joi.string().min(8).max(8),
+        fullname:Joi.string().min(10).max(50),
+        email:Joi.string().email(),
+        role_id:Joi.string().min(1).max(2),
+        verified:Joi.string().min(1).max(2),
+        status:Joi.string().min(1).max(1),
     });
   
     let { value, error } = schema.validate(body);
   
     if (error) {
-      response.status(400).send(error.details[0].message);
+      response.status(400).send(JSON.stringify({ "Error": error.details[0].message}));
       return false;
     }
   
