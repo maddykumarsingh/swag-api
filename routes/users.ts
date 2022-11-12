@@ -3,12 +3,6 @@ const router:Router = express.Router();
 import { User, Users } from '../models/user';
 import Joi from 'joi';
 
-// import { auth } from '../middleware/auth';
-// import nodmailer from 'nodemailer'
-// const bcrypt = require('bcrypt');
-
-
-// const { pick } = require('../helpers/pick');
 
 const users = new Users("", "");
 

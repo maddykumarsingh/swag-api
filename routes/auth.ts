@@ -1,6 +1,10 @@
 import express from "express";
 import Joi from "joi";
 import { User } from "../models/user";
+var jwt = require('jsonwebtoken');
+const config = require('config');
+
+
 
 const router = express.Router();
 const bcrypt = require("bcrypt");
@@ -22,10 +26,11 @@ router.post("/login", async (request, response) => {
     if( isMembership ){
         if( body.otp ){
          const isLoggedIn:boolean =  await user.login();
-         if( isLoggedIn ){
-           response.send({ token:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c" })
-           return
-         }
+          if( isLoggedIn ){
+            let token = jwt.sign({ id:1, name:'Nitin Singh',email:'' } ,'Swagkari@2022')
+            response.send({ token })
+            return
+          }
 
           response.status(400).send('Invalid OTP received');
           return
@@ -52,7 +57,7 @@ router.post("/logout", async (request, response) => {
 function validate(body: any, response: any) {
   let schema = Joi.object({
     mobile: Joi.string().trim().min(10).max(10).required(),
-    otp: Joi.string().min(8).max(8),
+    otp: Joi.string().min(6).max(6),
   });
 
   let { value, error } = schema.validate(body);
