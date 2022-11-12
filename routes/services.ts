@@ -111,10 +111,6 @@ router.patch('/status/:user_id', async(request, response) => {
 
 router.delete('/:service_id', async ( request , response )=>{
 
-    const { body } = request;
-  
-    if (!validate(body, response)) return;
-
     const removeService = await services.deleteService(request.params.service_id);
 
     response.setHeader('Content-Type', 'application/json');
