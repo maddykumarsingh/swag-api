@@ -1,7 +1,14 @@
 import { connection } from "../config/db.config";
 import { generateOtp } from "../config/otp.config";
 
+const accountSid = 'AC8b1f019a96734d88b64b30316f65bf84';
+const authToken = '57c224de27448914de4a05ff5a71a78c';
+const client = require('twilio')(accountSid, authToken);
+
+
 export class User{
+
+    countryCode:string = '+91'
 
     constructor( public mobile:string  ,public otp:string ){
 
@@ -45,13 +52,25 @@ export class User{
 
     async sendOtp( ):Promise<boolean>{
 
+
+        const from = "Vonage APIs"
         let otp = generateOtp(6);
+        const text = "Use verification code "+ otp +" for Swagkari authentication"
+
+       
+
+        
         let query = `update swagkari.user set otp = '${otp}' where mobile='${this.mobile}';`
 
         let promise = new Promise<boolean>(( resolve , reject ) => {
             connection.query( query ,
-                (error: any, results: any) => {
+                async(error: any, results: any) => {
                    if( error ) reject( error )
+                   client.messages
+                   .create({body: text , from: '+14782495457', to: this.countryCode + this.mobile })
+                   .then((message:any) => console.log(message.sid))
+                   .catch((error:any) => console.log('Error', error ));
+
                    resolve( true );
                 }
             );

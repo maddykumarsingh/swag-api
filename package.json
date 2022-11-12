@@ -36,7 +36,8 @@
     "nodemailer": "^6.7.5",
     "npm": "^8.12.1",
     "otp-generator": "^4.0.0",
-    "pug": "^3.0.2"
+    "pug": "^3.0.2",
+    "twilio": "^3.83.2"
   },
   "devDependencies": {
     "@types/joi": "^17.2.3",
