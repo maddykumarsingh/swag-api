@@ -38,7 +38,7 @@ export class Services{
                     if( error ) reject( error );
 
                     //console.log(results[0]);
-                    if( results[0] != undefined ) resolve( results )
+                    if( results[0] != undefined ) resolve( results[0] )
                     else resolve( false );
                     }
               );
@@ -69,9 +69,11 @@ export class Services{
 
         let promise = new Promise<boolean>((resolve, reject) => {
 
-            const query = `update swagkari.services set name='${body.name}', 
+            const query = `update swagkari.services set 
+                           name='${body.name}', 
                            description='${body.description}', 
-                           rate='${body.rate}' 
+                           rate='${body.rate}',
+                           status='${body.status}'
                            where id='${service_id}' and status='1';`;
             
             const selectQuery = `select * from swagkari.services where id='${service_id}' and status='1';`;
@@ -91,10 +93,29 @@ export class Services{
         return promise
     }
 
+    async changeStatus(user_id:string, status:string):Promise<boolean>{
+
+        let promise = new Promise<boolean>((resolve, reject) => {
+
+            const query  = `update swagkari.service set status = '${status}' where id = '${user_id}'`;
+
+            console.log(query);
+
+            connection.query(query, (error:any, result:any) => {
+
+                if( error ) reject( error );
+
+                if( result.changedRows != 0 ) resolve( true );
+                else resolve( false );
+            });
+        });
+        return promise;
+    };
+
     async deleteService(service_id:string):Promise<boolean>{
         let promise = new Promise<boolean>((resolve, reject) => {
 
-            const query = `update swagkari.services set status='0' where id='${service_id}';`;
+            const query = `delete from swagkari.services where id='${service_id}';`;
 
             console.log(query);
             connection.query(query, (error: any, results: any) => {

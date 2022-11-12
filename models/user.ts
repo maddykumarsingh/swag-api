@@ -127,7 +127,7 @@ export class Users extends User{
     async deleteUser(id:string):Promise<boolean> {
         let promise = new Promise<boolean>((resolve, reject) => {
 
-            const query = `update swagkari.user set status='0' where id='${id}';`;
+            const query = `delete from swagkari.user where id='${id}';`;
 
             console.log(query);
             connection.query(query, (error: any, results: any) => {
@@ -135,7 +135,7 @@ export class Users extends User{
                     if( error ) reject( error );
 
                     // console.log(results.changedRows)
-                    if( results.changedRows != 0 ) resolve( true )
+                    if( results.changedRows != 0 ) resolve( true );
                     else resolve( false );
                     }
               );
@@ -151,7 +151,8 @@ export class Users extends User{
                             fullname='${body.fullname}', 
                             email='${body.email}', 
                             role_id='${body.role_id}',
-                            verified='${body.verified}'
+                            verified='${body.verified}',
+                            status='${body.status}'
                             where id='${user_id}'`;
             
             const selectQuery = `select * from swagkari.user where id='${user_id}' and status='1';`;
@@ -162,14 +163,52 @@ export class Users extends User{
                     connection.query(selectQuery, (error:any, result:any) => {
 
                         if ( error ) reject( error );
-
+                        
                         if(result[0] != undefined) resolve( result );
                         else resolve(false)
                     });
                     }
               );
-        })
+        });
         return promise
-    }
+    };
+
+    async changeStatus(user_id:string, status:string):Promise<boolean>{
+
+        let promise = new Promise<boolean>((resolve, reject) => {
+
+            const query  = `update swagkari.user set status = '${status}' where id = '${user_id}'`;
+
+            console.log(query);
+
+            connection.query(query, (error:any, result:any) => {
+
+                if( error ) reject( error );
+
+                if( result.changedRows != 0 ) resolve( true );
+                else resolve( false );
+            });
+        });
+        return promise;
+    };
+
+    async changeRole(role:string, user_id:string):Promise<boolean>{
+
+        let promise = new Promise<boolean>((resolve, reject) => {
+
+            const query  = `update swagkari.user set role = '${role}' where id = '${user_id}'`;
+
+            console.log(query);
+
+            connection.query(query, (error:any, result:any) => {
+
+                if( error ) reject( error );
+
+                if( result.changedRows != 0 ) resolve( true );
+                else resolve( false );
+            });
+        });
+        return promise;
+    };
 
 }
