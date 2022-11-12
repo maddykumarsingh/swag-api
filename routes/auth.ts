@@ -32,12 +32,12 @@ router.post("/login", async (request, response) => {
         }
        
       let isSentOtp:boolean = await user.sendOtp()
-      if( isSentOtp ) response.send('OTP has been sent to your registered mobile number');
+      if( isSentOtp ) response.status(201).send({message:'OTP has been sent to your registered mobile number'});
       else response.status( 500 ).send('Server is down Please contact your IT adminstration.')
     }
     else{
       let isMembershipCreated:boolean  = await user.createMembership();
-      if( isMembershipCreated ) response.send('OTP has been sent to your registered mobile number')
+      if( isMembershipCreated ) response.status(201).send({ message:'OTP has been sent to your registered mobile number'})
       else response.status( 500 ).send('Server is down Please contact your IT adminstration.')
     }
 
