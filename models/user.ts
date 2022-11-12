@@ -29,14 +29,12 @@ export class User{
     async createMembership( ):Promise<boolean>{
         let promise = new Promise<boolean>(( resolve , reject ) => {
             
-            let otp = generateOtp(8);
+            let otp = generateOtp(6);
 
             connection.query(
                 `insert into swagkari.user(mobile, otp) values('${this.mobile}', '${otp}');`,
                 (error: any, results: any) => {
-                  console.log(otp);
                   if( error ) reject( error );
-
                   resolve( true );
                 }
               );
@@ -47,9 +45,8 @@ export class User{
 
     async sendOtp( ):Promise<boolean>{
 
-        let otp = generateOtp(8);
+        let otp = generateOtp(6);
         let query = `update swagkari.user set otp = '${otp}' where mobile='${this.mobile}';`
-        console.log( query );
 
         let promise = new Promise<boolean>(( resolve , reject ) => {
             connection.query( query ,
@@ -74,9 +71,7 @@ export class User{
 
     async login( ):Promise<boolean>{
 
-      let query = `select * from swagkari.user where mobile='${this.mobile}' and otp=${this.otp};`
-      console.log( query );
-
+       let query = `select * from swagkari.user where mobile='${this.mobile}' and otp=${this.otp};`
        let promise = new Promise<boolean>( ( resolve , reject ) => { 
             if( ! this.otp ) resolve( false );
            
@@ -100,7 +95,6 @@ export class Users extends User{
 
             const query = `select * from swagkari.user where status='1';`;
 
-            console.log(query);
             connection.query(query, (error: any, results: any) => {
                     // console.log(results);
                     if( error ) reject( error );
@@ -118,7 +112,6 @@ export class Users extends User{
 
             const query = `select * from swagkari.user where id='${id}' and status='1';`;
 
-            console.log(query);
             connection.query(query, (error: any, results: any) => {
                     if( error ) reject( error );
 
@@ -163,8 +156,6 @@ export class Users extends User{
             
             const selectQuery = `select * from swagkari.user where id='${user_id}' and status='1';`;
 
-            console.log(query);
-            console.log(selectQuery);
             connection.query(query, (error: any, results: any) => {
                     if( error ) reject( error );
 
