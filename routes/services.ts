@@ -16,34 +16,26 @@ const services = new Services();
 
 router.get('/' ,async (request:Request , response:Response) => {
 
-    const findAllServices = await services.getAllServices();
+    const servicesList = await services.getAllServices();
 
-    response.setHeader('Content-Type', 'application/json');
-
-    if (findAllServices){
+    if (servicesList){
 
         console.log(true)
-        response.send(JSON.stringify({ "Message": findAllServices}));
+        response.send(servicesList);
         return
     }
     console.log(false);
-    response.status(404).send(JSON.stringify({ "Error": "No services found.....!!"}));
+    response.status(404).send({ message: "No services found.....!!"} );
 });
 
 
 router.get('/:service_id',  async(request:Request , response:Response)=> {
 
-    const findService = await services.getService(request.params.service_id);
-
-    response.setHeader('Content-Type', 'application/json');
-    
-    if (findService){
-
-        console.log(true)
-        response.send(JSON.stringify({ "Message": findService}));
+    const service = await services.getService(request.params.service_id);
+    if (service){
+        response.send(service);
         return
     }
-    console.log(false)
     response.status(404).send(JSON.stringify({ "Error": "There is no such service.....!!"}));
 });
 
