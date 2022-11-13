@@ -1,9 +1,9 @@
 import { connection } from "../config/db.config";
 import { generateOtp } from "../config/otp.config";
 
-const accountSid = 'AC8b1f019a96734d88b64b30316f65bf84';
-const authToken = '57c224de27448914de4a05ff5a71a78c';
-const client = require('twilio')(accountSid, authToken);
+// const accountSid = 'AC8b1f019a96734d88b64b30316f65bf84';
+// const authToken = '57c224de27448914de4a05ff5a71a78c';
+// const client = require('twilio')(accountSid, authToken);
 
 
 export class User{
@@ -66,10 +66,10 @@ export class User{
             connection.query( query ,
                 async(error: any, results: any) => {
                    if( error ) reject( error )
-                   client.messages
-                   .create({body: text , from: '+14782495457', to: this.countryCode + this.mobile })
-                   .then((message:any) => console.log(message.sid))
-                   .catch((error:any) => console.log('Error', error ));
+                //    client.messages
+                //    .create({body: text , from: '+14782495457', to: this.countryCode + this.mobile })
+                //    .then((message:any) => console.log(message.sid))
+                //    .catch((error:any) => console.log('Error', error ));
 
                    resolve( true );
                 }
@@ -147,8 +147,6 @@ export class Users extends User{
         let promise = new Promise<boolean>((resolve, reject) => {
 
             const query = `delete from swagkari.user where id='${id}';`;
-
-            console.log(query);
             connection.query(query, (error: any, results: any) => {
                     console.log(results);
                     if( error ) reject( error );
@@ -198,8 +196,6 @@ export class Users extends User{
 
             const query  = `update swagkari.user set status = '${status}' where id = '${user_id}'`;
 
-            console.log(query);
-
             connection.query(query, (error:any, result:any) => {
 
                 if( error ) reject( error );
@@ -216,8 +212,6 @@ export class Users extends User{
         let promise = new Promise<boolean>((resolve, reject) => {
 
             const query  = `update swagkari.user set role = '${role}' where id = '${user_id}'`;
-
-            console.log(query);
 
             connection.query(query, (error:any, result:any) => {
 
