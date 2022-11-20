@@ -33,10 +33,10 @@ router.get('/:service_id',  async(request:Request , response:Response)=> {
 
     const service = await services.getService(request.params.service_id);
     if (service){
-        response.send(service);
+        response.send( service );
         return
     }
-    response.status(404).send(JSON.stringify({ "Error": "There is no such service.....!!"}));
+    response.status(404).send({ message: "There is no such service.....!!"});
 });
 
 
@@ -48,16 +48,14 @@ router.post('/', async( request :Request, response:Response ) => {
 
     const createService = await services.createService(body);
 
-    response.setHeader('Content-Type', 'application/json');
-
     if (createService){
 
         console.log(true);
-        response.send(JSON.stringify({ "Message": "New service created successfully......!!"}));
+        response.send({ message: "New service created successfully......!!"});
         return
     }
     console.log(false);
-    response.status(404).send(JSON.stringify({ "Error": "Oops! Something went wrong..... Service not created.....!!"}));
+    response.status(404).send({ message: "Oops! Something went wrong..... Service not created.....!!"});
 });
 
 
@@ -69,16 +67,14 @@ router.put('/:service_id' , async ( request , response ) => {
 
     const updateService = await services.updateService(body, request.params.service_id);
 
-    response.setHeader('Content-Type', 'application/json');
-
     if (updateService){
 
         console.log(true);
-        response.send(JSON.stringify({ "Message": updateService}));
+        response.send( updateService );
         return
     }
     console.log(false);
-    response.status(404).send(JSON.stringify({ "Error": "Oops! Something went wrong..... Service not updated.....!!"}));
+    response.status(404).send({ message: "Oops! Something went wrong..... Service not updated.....!!"});
 });
 
 
@@ -88,16 +84,14 @@ router.patch('/status/:user_id', async(request, response) => {
 
     const isStatusChanged = await services.changeStatus(body.role_id, request.params.user_id);
 
-    response.setHeader('Content-Type', 'application/json');
-
     if (isStatusChanged){
 
         console.log(true);
-        response.send(JSON.stringify({ "Message": "The status updated for selected service successfully......!!"}));
+        response.send({ message: "The status updated for selected service successfully......!!"});
         return
     }
     console.log(false);
-    response.status(404).send(JSON.stringify({ "Error": "Oops! Something went wrong..... Service status not updated.....!!"}));
+    response.status(404).send({ message: "Oops! Something went wrong..... Service status not updated.....!!"});
 });
 
 
@@ -105,24 +99,20 @@ router.delete('/:service_id', async ( request , response )=>{
 
     const removeService = await services.deleteService(request.params.service_id);
 
-    response.setHeader('Content-Type', 'application/json');
-
     if (removeService){
 
         console.log(true);
-        response.send(JSON.stringify({ "Message": "The service deleted successfully......!!"}));
+        response.send({ message: "The service deleted successfully......!!"});
         return
 
     }
     console.log(false);
-    response.status(404).send(JSON.stringify({ "Error": "Oops! Something went wrong..... Service not deleted.....!!"}));
+    response.status(404).send({ message: "Oops! Something went wrong..... Service not deleted.....!!"});
 });
 
 
 
- export function validate( body:any , response:any ){
-
-    response.setHeader('Content-Type', 'application/json');
+ export function validate( body:any , response:any ){     
 
     let schema = Joi.object({
         name:Joi.string().min(3).max(50).required(),
@@ -135,7 +125,7 @@ router.delete('/:service_id', async ( request , response )=>{
     let { value , error } = schema.validate( body );
 
     if( error ){
-        response.status(400).send(JSON.stringify({ "Error": error.details[0].message }));
+        response.status(400).send({ message: error.details[0].message });
         return false
     }
 
