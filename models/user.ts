@@ -1,16 +1,13 @@
 import { connection } from "../config/db.config";
 import { generateOtp } from "../config/otp.config";
-
-// const accountSid = 'AC8b1f019a96734d88b64b30316f65bf84';
-// const authToken = '57c224de27448914de4a05ff5a71a78c';
-// const client = require('twilio')(accountSid, authToken);
-
+import { MessageService } from '../services/message.service';
 
 export class User{
 
     countryCode:string = '+91'
 
-    constructor( public mobile:string  ,public otp:string ){
+    constructor( public mobile:string  ,public otp:string ,
+         public email?:string , public name?:string ){
 
     }
 
@@ -57,6 +54,8 @@ export class User{
         let otp = generateOtp(6);
         const text = "Use verification code "+ otp +" for Swagkari authentication"
 
+        const messageService:MessageService = new MessageService()
+       
        
 
         
@@ -66,10 +65,10 @@ export class User{
             connection.query( query ,
                 async(error: any, results: any) => {
                    if( error ) reject( error )
-                //    client.messages
-                //    .create({body: text , from: '+14782495457', to: this.countryCode + this.mobile })
-                //    .then((message:any) => console.log(message.sid))
-                //    .catch((error:any) => console.log('Error', error ));
+                        messageService.sendText( text , this.mobile );
+            
+                        if( this.email )
+                                messageService.sendMail( text , this.email ,'Authrization is required');
 
                    resolve( true );
                 }
