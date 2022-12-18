@@ -1,29 +1,30 @@
 // import { Schema, model } from 'mongoose';
 import { connection } from "../config/db.config";
+import { User } from './user';
 
 
 
-export class Customer{
+export class Customer extends User{
 
-    constructor( public fullname:string, public mobile:string){
-
-    }
 }
 
 
 export class Customers{
 
-    async getAllCustomers():Promise<any>{
-        let promise = new Promise<boolean>((resolve, reject) => {
+    async getAllCustomers():Promise<Customer[] | boolean>{
+        let promise = new Promise<Customer[] | boolean>((resolve, reject) => {
 
             const query = `select * from swagkari.customer;`;
 
             console.log(query);
             connection.query(query, (error: any, results: any) => {
-                    // console.log(results);
+                console.log( results )
                     if( error ) reject( error );
 
-                    if( results != undefined ) resolve( results )
+                    if( results != undefined ){                        
+                        return resolve( results )
+                    
+                    } 
                     else resolve( false );
                     }
               );
@@ -129,21 +130,3 @@ export class Customers{
     
 }
 
-// export interface ICustomer{
-//     name:string,
-//     email:string,
-//     contact:string,
-//     is_active?:boolean,
-//     head_user?: string
-// }
-
-
-// export const schema  = new Schema<ICustomer>({
-//     name:String,
-//     email:String,
-//     contact:String,
-//     is_active:{ type:Boolean , default: true },
-//     head_user:{type:Schema.Types.ObjectId , ref:'User'}
-// })
-
-// export const Customer = model<ICustomer>('Customer' , schema );

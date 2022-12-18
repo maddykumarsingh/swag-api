@@ -3,9 +3,6 @@
 
 
 
-
-
-
 export const configuration = {
 
     host:'smtp.ethereal.com',  // host server 

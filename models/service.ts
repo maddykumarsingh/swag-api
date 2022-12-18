@@ -123,10 +123,9 @@ export class Services{
                     if( error ) reject( error );
 
                     // console.log(results.changedRows)
-                    if( results.changedRows != 0 ) resolve( true )
+                    if( results.affectedRows != 0 ) resolve( true )
                     else resolve( false );
-                    }
-              );
+            });
         })
         return promise
     }

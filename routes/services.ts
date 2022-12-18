@@ -100,13 +100,10 @@ router.delete('/:service_id', async ( request , response )=>{
     const removeService = await services.deleteService(request.params.service_id);
 
     if (removeService){
-
-        console.log(true);
-        response.send({ message: "The service deleted successfully......!!"});
+        response.status(200).send({ message: "The service deleted successfully......!!"});
         return
-
     }
-    console.log(false);
+
     response.status(404).send({ message: "Oops! Something went wrong..... Service not deleted.....!!"});
 });
 
@@ -116,8 +113,10 @@ router.delete('/:service_id', async ( request , response )=>{
 
     let schema = Joi.object({
         name:Joi.string().min(3).max(50).required(),
-        description:Joi.string(),
-        rate:Joi.string(),
+        description:Joi.string().optional(),
+        discount:Joi.any().optional(),
+        offer:Joi.any(),
+        rate:Joi.any(),
         documents:Joi.array(),
         status:Joi.string().min(1).max(1)
     });
