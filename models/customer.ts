@@ -40,15 +40,14 @@ export class Customers{
 
             const query = `select * from swagkari.customer where ${condition}`;
 
-            console.log(query);
             connection.query(query, (error: any, results: any) => {
                 if( error ) reject( error );
 
-                // console.log(results[0]);
-                if( results[0] != undefined ) resolve( results[0] )
+                console.log( results[0] );
+                if( results ) resolve( results[0] )
                 else resolve( false );
                 }
-              );
+            );
         })
         return promise
     }

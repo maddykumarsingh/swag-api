@@ -60,10 +60,19 @@ export class Leads{
             const customer = new Customers();
 
             let customer_id;
+            let isCustomerExist;
 
-            const isCustomerExist = await customer.getCustomer("", body);
+            try{ 
+                isCustomerExist = await customer.getCustomer("", body);
+                console.log('Customer Exits', isCustomerExist )
+            }
+            catch ( error ) {
+                console.log( error );
+                reject( error );
+            }
+
             
-            if(!isCustomerExist[0]){
+            if( isCustomerExist ){
 
                 const isCustomerCreated = await customer.createCustomer(body);
                 const newCustomer = await customer.getCustomer("", body);

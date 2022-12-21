@@ -1,4 +1,5 @@
 import express , { Router , Request , Response } from 'express';
+import { optional } from 'joi';
 const Joi = require('joi').extend(require('@joi/date'));
 import { Leads } from '../models/lead';
 const router = Router();
@@ -119,15 +120,15 @@ function validate(body: any, response: any) {
         fullname:Joi.string().min(10).max(50).required(),
         mobile: Joi.string().trim().min(10).max(10).required(),
         email:Joi.string().email().max(255),
-        dob: Joi.date().format('YYYY-MM-DD'),
-        gender: Joi.string().max(6),
-        religion: Joi.string().max(20),
-        address: Joi.string().max(255),
-        rate:Joi.string().max(12),
-        remarks:Joi.string(),
-        status:Joi.string().min(1).max(1),
-        user_id:Joi.string().max(1),
-        service_id:Joi.string().max(1)
+        dob: Joi.date().optional().allow(null).format('YYYY-MM-DD'),
+        gender: Joi.string().optional().allow('').max(6),
+        religion: Joi.string().optional().allow('').max(20),
+        address: Joi.string().optional().allow('').max(255),
+        rate_quoted:Joi.string().max(12),
+        remarks:Joi.string().optional().allow(''),
+        status:Joi.string().optional().allow('').min(1).max(1),
+        user_id:Joi.string().max(1).required(),
+        service_id:Joi.string().max(1).required()
     });
   
     let { value, error } = schema.validate(body);
