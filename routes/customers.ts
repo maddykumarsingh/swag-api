@@ -52,6 +52,7 @@ router.post('/', async( request , response ) => {
   
     if (!validate(body, response)) return;
 
+    console.log( body );
     const isCustomerCreated = await customer.createCustomer(body);
 
     if(!isCustomerCreated){
@@ -156,11 +157,11 @@ function validate(body: any, response: any) {
     let schema = Joi.object({
         fullname: Joi.string().min(10).max(50).required(),
         mobile: Joi.string().trim().min(10).max(10).required(),
-        email: Joi.string().email().max(255),
-        dob: Joi.date().format('YYYY-MM-DD'),
-        gender: Joi.string().max(6),
-        religion: Joi.string().max(20),
-        address: Joi.string().max(255)
+        email: Joi.string().optional().allow('').email().max(255),
+        dob: Joi.date().optional().allow('').format('YYYY-MM-DD'),
+        gender: Joi.string().optional().allow('').max(6),
+        religion: Joi.string().optional().allow('').max(20),
+        address: Joi.string().optional().allow('').max(255)
     });
   
     let { value, error } = schema.validate(body);
