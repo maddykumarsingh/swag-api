@@ -64,7 +64,6 @@ export class Customers{
                 const query = `insert into swagkari.customer(fullname, mobile, email, DOB, gender, religion, address) 
                             values('${body.fullname}', '${body.mobile}', '${body.email}', ${(body.dob)?body.dob:null }, '${body.gender}', '${body.religion}', '${body.address}');`;
 
-                console.log(query);
                 connection.query(query, (error: any, results: any) => {
                         // console.log();
                         if( error ) reject( error );

@@ -18,7 +18,12 @@ export class Leads{
     async getAllLeads():Promise<any>{
         let promise = new Promise<boolean>((resolve, reject) => {
 
-            const query = `select * from swagkari.leads where status='1';`;
+            const query = `SELECT * FROM leads
+            INNER JOIN user ON user.id = leads.user_id
+            INNER JOIN customer ON customer.id = leads.customer_id
+            INNER JOIN services ON services.id = leads.service_id
+            WHERE leads.status = '1'
+            ;`;
 
             console.log(query);
             connection.query(query, (error: any, results: any) => {

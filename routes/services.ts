@@ -126,7 +126,9 @@ router.delete('/:service_id', async ( request , response )=>{
 
     let schema = Joi.object({
         name:Joi.string().min(3).max(50).required(),
-        description:Joi.string(),
+        description:Joi.string().optional().allow(''),
+        offer:Joi.number().optional().allow(0),
+        discount:Joi.number().optional().allow(0),
         rate:Joi.string(),
         documents:Joi.array(),
         status:Joi.string().min(1).max(1)

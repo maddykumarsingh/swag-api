@@ -3,58 +3,55 @@ const Joi = require('joi').extend(require('@joi/date'));
 import { Leads } from '../models/lead';
 // import {  Lead } from '../models/lead';
 // import express , { Router , Request , Response } from 'express';
-// import multer from 'multer';
-// import { configuration } from '../config/multer.config';
+import multer from 'multer';
+import { configuration } from '../config/multer.config';
 // import { auth } from '../middleware/auth';
 // import { Lead } from '../models/lead';
 // import { CustomerDocument } from '../models/document';
 // import { Customer } from '../models/customer';
-// const  path = require('path');
+const  path = require('path');
 
 
 const router = Router();
 
 const leads = new Leads();
 
-// configuration.storage = multer.diskStorage({
-//     destination:( request , file , callback:any ) => {
-//         callback(null , 'public/documents' )
-//     },
-//     filename:( request , file , callback:any ) => {
-//        callback(null , Date.now() + path.extname(file.originalname) )
-//     }
-// })
+configuration.storage = multer.diskStorage({
+    destination:( request , file , callback:any ) => {
+        callback(null , 'public/documents' )
+    },
+    filename:( request , file , callback:any ) => {
+       callback(null , Date.now() + path.extname(file.originalname) )
+    }
+})
 
-// configuration.fileFilter = (request:Request , file:Express.Multer.File , callback:any  ) => {
-//     var types = /jpeg|png|jpg|pdf/;
-//     var mimetype = types.test(file.mimetype);
-//     var extension = types.test(path.extname(file.originalname).toLowerCase());
+configuration.fileFilter = (request:Request , file:Express.Multer.File , callback:any  ) => {
+    var types = /jpeg|png|jpg|pdf/;
+    var mimetype = types.test(file.mimetype);
+    var extension = types.test(path.extname(file.originalname).toLowerCase());
     
-//      if( mimetype && extension ){
-//          return callback( null , true );
-//      }
+     if( mimetype && extension ){
+         return callback( null , true );
+     }
 
-//  callback(`Error: File upload only supports the following filetypes - ${types}`)
-// }
+ callback(`Error: File upload only supports the following filetypes - ${types}`)
+}
 
 
-// const documentUpload = multer( configuration );
+const documentUpload = multer( configuration ).array('');
 
 
 router.get('/', async ( request:Request , response:Response ) => {
 
-  const findAllLeads = await leads.getAllLeads();
+  const allLeads = await leads.getAllLeads();
 
-  response.setHeader('Content-Type', 'application/json');
 
-  if (findAllLeads){
-
-      console.log(true)
-      response.send(JSON.stringify({ "Message": findAllLeads}));
+  if (allLeads){
+      response.send(allLeads);
       return
   }
   console.log(false);
-  response.status(404).send(JSON.stringify({ "Error": "No Leads found.....!!"}));
+  response.status(200).send([]);
 });
 
 

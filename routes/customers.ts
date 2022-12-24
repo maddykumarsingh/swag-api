@@ -14,18 +14,15 @@ import { request } from 'http';
 const customer = new Customers();
 
 router.get('/', async ( request , response) => {
-    const findAllCustomers = await customer.getAllCustomers();
+    const customers = await customer.getAllCustomers();
 
     response.setHeader('Content-Type', 'application/json');
 
-    if (findAllCustomers){
-
-        console.log(true)
-        response.send(JSON.stringify({ "Message": findAllCustomers }));
+    if ( customers ){
+        response.status(200).send(customers);
         return
     }
-    console.log(false);
-    response.status(404).send(JSON.stringify({ "Error": "No Customers found.....!!" }));
+    response.status(200).send([]);
 });
 
 
